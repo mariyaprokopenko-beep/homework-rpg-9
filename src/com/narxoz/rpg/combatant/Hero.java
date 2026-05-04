@@ -1,6 +1,8 @@
 package com.narxoz.rpg.combatant;
 
 import com.narxoz.rpg.artifact.Inventory;
+import com.narxoz.rpg.artifact.Artifact;
+import java.util.ArrayList;
 
 /**
  * Represents a player-controlled hero participating in the vault run.
@@ -152,11 +154,13 @@ public class Hero {
     /**
      * Creates a memento placeholder for the hero's current state.
      *
-     * @return a HeroMemento snapshot, or null in the scaffold
+     * @return a HeroMemento snapshot
      */
     public HeroMemento createMemento() {
-        // TODO: capture the full mutable state into a HeroMemento.
-        return null;
+        return new HeroMemento(
+                name, hp, mana, gold, maxHp, attackPower, defense,
+                inventory.getArtifacts()
+        );
     }
 
     /**
@@ -165,7 +169,15 @@ public class Hero {
      * @param memento the snapshot to restore from
      */
     public void restoreFromMemento(HeroMemento memento) {
-        // TODO: read the snapshot and restore the hero's mutable state.
+        if (memento == null) return;
+        this.hp = memento.getHp();
+        this.mana = memento.getMana();
+        this.gold = memento.getGold();
+        Inventory newInv = new Inventory();
+        for (com.narxoz.rpg.artifact.Artifact a : memento.getInventorySnapshot()) {
+            newInv.addArtifact(a);
+        }
+        this.inventory = newInv;
     }
 
     @Override
